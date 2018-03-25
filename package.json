@@ -1,0 +1,29 @@
+{
+  "name": "searchhelpertools",
+  "version": "1.0.0",
+  "description": "快速对接全文检索服务客户端程序",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qly612525/searchHelperTools.git"
+  },
+  "keywords": [
+    "search",
+    "library"
+  ],
+  "author": "qian_leyi",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/qly612525/searchHelperTools/issues"
+  },
+  "homepage": "https://github.com/qly612525/searchHelperTools#readme",
+  "devDependencies": {
+    "@types/jest": "^22.2.2",
+    "jest": "^22.4.3",
+    "ts-jest": "^22.4.2",
+    "typescript": "^2.7.2"
+  }
+}
