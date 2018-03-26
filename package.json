@@ -21,9 +21,14 @@
   },
   "homepage": "https://github.com/qly612525/searchHelperTools#readme",
   "devDependencies": {
+    "@types/fetch.io": "^4.1.0",
     "@types/jest": "^22.2.2",
+    "@types/node": "^9.6.0",
     "jest": "^22.4.3",
     "ts-jest": "^22.4.2",
     "typescript": "^2.7.2"
+  },
+  "dependencies": {
+    "whatwg-fetch": "^2.0.3"
   }
 }
