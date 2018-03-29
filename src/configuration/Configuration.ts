@@ -1,4 +1,4 @@
-import Option from "../Option/index";
+import Option from "../option/Option";
 
 
 export default class Configuration {

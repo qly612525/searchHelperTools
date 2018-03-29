@@ -1,4 +1,4 @@
-import Option, { OptionException } from '../../src/Option/index';
+import Option, { OptionException } from '../../src/option/Option';
 
 describe('Option类测试套件', () => { 
 

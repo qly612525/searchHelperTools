@@ -1,3 +1,3 @@
-export * from './Option/index';
-export * from './Configuration/index';
-export * from './BaseRequest/index';
+export * from './option/Option';
+export * from './configuration/Configuration';
+export * from './baseRequest/BaseResquest';

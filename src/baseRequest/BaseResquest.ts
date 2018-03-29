@@ -1,18 +1,18 @@
-import 'whatwg-fetch';
-import Confirguration from '../Configuration/index';
-import Configuration from '../Configuration/index';
+import axios, { AxiosResponse } from 'axios';
+
+import Configuration from '../configuration/Configuration';
 
 export default class BaseRequest {
 
-    private _configuration: Confirguration;
+    private _configuration: Configuration;
     private _url: string;
 
     constructor(url?:string) {
-        this._configuration = new Confirguration();
+        this._configuration = new Configuration();
         this._url = url || '';
     }
 
-    get config():Confirguration {
+    get config():Configuration {
         return this._configuration;
     }
 
@@ -35,34 +35,36 @@ export default class BaseRequest {
     }
 
     async get() {
+        
         if (!this.checkConfig()) {
             throw new Error('url为空或者配置信息有错误！');
         }
-        const opts = { method: 'GET' };
-        let response = null;
+
+        let response: AxiosResponse<any>;
 
         try {
-            response = await fetch(this._url, opts);
+            response = await axios.get(this._url);
         } catch (e) {
             throw new Error(`GET请求抛出异常：${e}`);
         }
-
-        return response.json();
+        
+        return response.data;
     }
 
-    async post() {
+    async post(data: object) {
+
         if (!this.checkConfig()) {
             throw new Error('url为空或者配置信息有错误！');
         }
-        const opts = { method: 'POST' };
-        let response = null;
+
+        let response: AxiosResponse<any>;
 
         try {
-            response = await fetch(this._url, opts);
+            response = await axios.post(this._url, data);
         } catch (e) {
             throw new Error(`POST请求抛出异常：${e}`);
         }
-
-        return response;
+    
+        return response.data;
     }
 }

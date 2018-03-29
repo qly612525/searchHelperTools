@@ -1,5 +1,5 @@
-import Configuration from '../../src/Configuration/index';
-import Option from '../../src/Option/index';
+import Configuration from '../../src/configuration/Configuration';
+import Option from '../../src/option/Option';
 
 describe('Configuration 测试套件', () => {
 
