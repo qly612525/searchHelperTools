@@ -4,7 +4,8 @@
   "description": "快速对接全文检索服务客户端程序",
   "main": "index.js",
   "scripts": {
-    "test": "jest --"
+    "test": "jest --",
+    "build": "rm -rf ./dist && tsc"
   },
   "repository": {
     "type": "git",

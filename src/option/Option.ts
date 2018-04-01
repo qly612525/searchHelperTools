@@ -1,9 +1,9 @@
-export default class Option {
+export default class Option<T> {
     private _key: string;
-    private _value: string;
+    private _value: T;
 
-    constructor(key: string, value: string) {
-        if (key === '' || value === '') throw OptionException();
+    constructor(key: string, value: T) {
+        if (key === '') throw OptionException();
         this._key = key;
         this._value = value;
     }
@@ -17,12 +17,11 @@ export default class Option {
         this._key = val;
     }
 
-    get value(): string {
+    get value(): T {
         return this._value;
     }
 
-    set value(val: string) {
-        if (val === '') throw OptionException();
+    set value(val: T) {
         this._value = val;
     }
 }
