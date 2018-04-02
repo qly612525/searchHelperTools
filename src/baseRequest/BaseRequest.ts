@@ -4,7 +4,7 @@ import Configuration from '../configuration/Configuration';
 
 export default class BaseRequest {
 
-    private _configuration: Configuration;
+    protected _configuration: Configuration;
     private _url: string;
 
     constructor(url?:string) {

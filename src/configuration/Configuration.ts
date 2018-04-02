@@ -3,7 +3,7 @@ import Option from "../option/Option";
 
 export default class Configuration {
 
-    private _options: Array<Option>;
+    protected _options: Array<Option<any>>;
 
     constructor() {
         this._options = [];
@@ -16,7 +16,7 @@ export default class Configuration {
     get(key: string): string|null {
         let val: string | null = null;
         const ops = this._options;
-        ops.map((op: Option) => { 
+        ops.map((op: any) => { 
             if (op.key === key) val = op.value;
         });
 
@@ -24,12 +24,17 @@ export default class Configuration {
         return null;
     }
 
-    getItem(index: number): Option {
+    getItem(index: number): Option<any> {
         const ops = this._options;
         return ops[index];
     }
 
-    push(op: Option): void {
+    getParams(): string {
+        let val: string = '';
+        return val;
+    }
+
+    push(op: Option<any>): void {
         this._options.push(op);
     }
 

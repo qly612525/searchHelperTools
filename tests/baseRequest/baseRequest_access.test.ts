@@ -1,4 +1,4 @@
-import BaseRequest from '../../src/baseRequest/BaseResquest';
+import BaseRequest from '../../src/baseRequest/BaseRequest';
 import Configuration from '../../src/configuration/Configuration';
 import Option from '../../src/option/Option';
 

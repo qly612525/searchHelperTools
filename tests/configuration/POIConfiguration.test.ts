@@ -4,14 +4,16 @@ import Configuration from '../../src/configuration/Configuration';
 
 describe('POI 参数配置测试', () => {
 
+    let config: POIConfiguration;
+    beforeEach(() => { 
+        config = new POIConfiguration();
+    });
+
     test('POIConfiguration类实例化测试', () => { 
-        const config = new POIConfiguration();
         testProperty(config);
     });
 
     test('POIConfiguration类accessor处理器', () => { 
-        const config = new POIConfiguration();
-
         expect(config.user.key).toBe('user');
         config.user.value = 'user_test';
         expect(config.user.value).toBe('user_test');
@@ -87,9 +89,17 @@ describe('POI 参数配置测试', () => {
     });
 
     test('POIConfiguration类 => reset()', () => { 
-        const config = new POIConfiguration();
-        config.reset();
+        const self = config.reset();
         testProperty(config);
+        expect(self).toBeInstanceOf(POIConfiguration);
+    });
+
+    test('POIConfiguration类 => getParams()', () => { 
+        expect(config.getParams()).toBe('method=FULL&scope=_FULLTEXT&pageIndex=0&pageSize=20&limit=512');
+        config.user.value = 'admin';
+        expect(config.getParams()).toBe('user=admin&method=FULL&scope=_FULLTEXT&pageIndex=0&pageSize=20&limit=512');
+        config.keywords.value = '北京 广西大厦';
+        expect(config.getParams()).toBe('user=admin&keywords=北京 广西大厦&method=FULL&scope=_FULLTEXT&pageIndex=0&pageSize=20&limit=512');
     });
 });
 
@@ -103,20 +113,20 @@ function testProperty(config:POIConfiguration) {
     expect(config.scope.key).toBe('scope');
     expect(config.groupBy.key).toBe('groupBy');
     expect(config.bounds.key).toBe('bounds');
-    expect(config.bounds.value).toBeUndefined();
+    expect(config.bounds.value).toBeNull();
     expect(config.location.key).toBe('location');
-    expect(config.location.value).toBeUndefined();
+    expect(config.location.value).toBeNull();
     expect(config.polyline.key).toBe('polyline');
-    expect(config.polyline.value).toBeUndefined();
+    expect(config.polyline.value).toBeNull();
     expect(config.polygon.key).toBe('polygon');
-    expect(config.polygon.value).toBeUndefined();
+    expect(config.polygon.value).toBeNull();
     expect(config.buffer.key).toBe('buffer');
-    expect(config.buffer.value).toBeUndefined();
+    expect(config.buffer.value).toBeNull();
     expect(config.filterCustom.key).toBe('filterCustom');
     expect(config.sortBy.key).toBe('sortBy');
     expect(config.pageIndex.key).toBe('pageIndex');
     expect(config.pageSize.key).toBe('pageSize');
     expect(config.limit.key).toBe('limit');
     expect(config.callback.key).toBe('callback');
-    expect(config.callback.value).toBeUndefined();
+    expect(config.callback.value).toBeNull();
 }

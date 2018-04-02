@@ -4,14 +4,14 @@ import Configuration from './Configuration';
 // 全文方法
 export enum Method { ACC = 'ACC', FULL = 'FULL', LIKE = 'LIKE' };
 // 空间类型
-type Bounds = [number, number, number, number] | undefined;
-type Location = [number, number] | undefined;
+type Bounds = [number, number, number, number] | null;
+type Location = [number, number] | null;
 type Point = [number, number];
-type Polyline = Array<Point> | undefined;
-type Polygon = Array<Point> | undefined; // 起点与终点重复，形成闭环
-type Buffer = number | undefined;
+type Polyline = Array<Point> | null;
+type Polygon = Array<Point> | null; // 起点与终点重复，形成闭环
+type Buffer = number | null;
 // JSONP 协议参数类型
-type JSONP = ((data: any) => void) | undefined;
+type JSONP = ((data: any) => void) | null;
 
 export default class POIConfiguration extends Configuration {
 
@@ -40,11 +40,11 @@ export default class POIConfiguration extends Configuration {
     //
     // ─── SPATIAL FILTER ─────────────────────────────────────────────────────────────
     //
-    private _bounds: Option<Bounds> = new Option<Bounds>('bounds', undefined);
-    private _location: Option<Location> = new Option<Location>('location', undefined);
-    private _polyline: Option<Polyline> = new Option<Polyline>('polyline', undefined);
-    private _polygon: Option<Polygon> = new Option<Polygon>('polygon', undefined);
-    private _buffer: Option<Buffer> = new Option<Buffer>('buffer', undefined);
+    private _bounds: Option<Bounds> = new Option<Bounds>('bounds', null);
+    private _location: Option<Location> = new Option<Location>('location', null);
+    private _polyline: Option<Polyline> = new Option<Polyline>('polyline', null);
+    private _polygon: Option<Polygon> = new Option<Polygon>('polygon', null);
+    private _buffer: Option<Buffer> = new Option<Buffer>('buffer', null);
     // ────────────────────────────────────────────────────────────────────────────────
 
     //
@@ -71,12 +71,13 @@ export default class POIConfiguration extends Configuration {
     //
     // ─── JSONP PROTOCOL ─────────────────────────────────────────────────────────────
     //
-    private _callback: Option<JSONP> = new Option<JSONP>('callback', undefined);
+    private _callback: Option<JSONP> = new Option<JSONP>('callback', null);
     // ────────────────────────────────────────────────────────────────────────────────
     
         
     constructor() {
         super();
+        this._options = [this._user, this._group, this._layers, this._keywords, this._method, this._scope, this._groupBy, this._bounds, this._location, this._polyline, this._polygon, this._buffer, this._filterCustom, this._sortBy, this._pageIndex, this._pageSize, this._limit, this._callback];
     }
 
     //
@@ -265,7 +266,7 @@ export default class POIConfiguration extends Configuration {
 
     // ────────────────────────────────────────────────────────────────────────────────
 
-    reset() {
+    reset(): POIConfiguration {
         this._user = new Option<string>('user', '');
         this._group = new Option<Array<string>>('group', []);
         this._layers = new Option<Array<string>>('layers', []);
@@ -273,18 +274,47 @@ export default class POIConfiguration extends Configuration {
         this._method = new Option<Method>('method', Method.FULL);
         this._scope = new Option<string>('scope', '_FULLTEXT');
         this._groupBy = new Option<string>('groupBy', '');
-        this._bounds = new Option<Bounds>('bounds', undefined);
-        this._location = new Option<Location>('location', undefined);
-        this._polyline = new Option<Polyline>('polyline', undefined);
-        this._polygon = new Option<Polygon>('polygon', undefined);
-        this._buffer = new Option<Buffer>('buffer', undefined);
+        this._bounds = new Option<Bounds>('bounds', null);
+        this._location = new Option<Location>('location', null);
+        this._polyline = new Option<Polyline>('polyline', null);
+        this._polygon = new Option<Polygon>('polygon', null);
+        this._buffer = new Option<Buffer>('buffer', null);
         this._filterCustom = new Option<string>('filterCustom', '');
         this._sortBy = new Option<string>('sortBy', '');
         this._pageIndex = new Option<number>('pageIndex', 0);
         this._pageSize = new Option<number>('pageSize', 20);
         this._limit = new Option<number>('limit', 512);
-        this._callback = new Option<JSONP>('callback', undefined);
+        this._callback = new Option<JSONP>('callback', null);
+        return this;
     }
+
+    //
+    // ─── OVERRIDE FUNCTIONS ─────────────────────────────────────────────────────────
+    //
+
+    getParams(): string {
+        let val: string[] = [];
+        const ops = this._options;
+        ops.map((op: any) => {
+
+            let isJoin = true;
+            if (op.value === null) {
+                isJoin = false;
+            } else if (op.value === '') {
+                isJoin = false;
+            } else if (((op.value) as Array<string>).length === 0) {
+                isJoin = false;
+            }
+
+            if (isJoin) {
+                val.push(op.key + '=' + op.value);
+            }
+
+        });
+        return val.join('&');
+    }
+
+    // ────────────────────────────────────────────────────────────────────────────────
 
     private _throwSetNameException(name: string) {
         throw new Error(`set的Option的key值必须是${name}`);
