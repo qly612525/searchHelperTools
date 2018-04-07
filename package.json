@@ -23,9 +23,16 @@
   "homepage": "https://github.com/qly612525/searchHelperTools#readme",
   "devDependencies": {
     "@types/jest": "^22.2.2",
+    "@types/vinyl": "^2.0.2",
+    "browserify": "^16.1.1",
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-typescript": "^4.0.2",
     "jest": "^22.4.3",
     "ts-jest": "^22.4.2",
-    "typescript": "^2.7.2"
+    "tsify": "^3.0.4",
+    "typescript": "^2.7.2",
+    "vinyl-source-stream": "^2.0.0"
   },
   "dependencies": {
     "axios": "^0.18.0"

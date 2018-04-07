@@ -1,4 +1,4 @@
-import POIConfiguration, { Method } from '../../src/configuration/POIConfiguration';
+import POIConfiguration, { Method, Type } from '../../src/configuration/POIConfiguration';
 import Option from '../../src/option/Option';
 import Configuration from '../../src/configuration/Configuration';
 
@@ -33,6 +33,10 @@ describe('POI 参数配置测试', () => {
         expect(config.method.key).toBe('method');
         config.method.value = Method.ACC;
         expect(config.method.value).toEqual(Method.ACC);
+
+        expect(config.type.key).toBe('type');
+        config.type.value = Type.GQ;
+        expect(config.type.value).toEqual(Type.GQ);
 
         expect(config.scope.key).toBe('scope');
         config.scope.value = 'scope_test';
@@ -95,11 +99,11 @@ describe('POI 参数配置测试', () => {
     });
 
     test('POIConfiguration类 => getParams()', () => { 
-        expect(config.getParams()).toBe('method=FULL&scope=_FULLTEXT&pageIndex=0&pageSize=20&limit=512');
+        expect(config.getParams()).toBe('method=FULL&type=FQ&scope=_FULLTEXT&pageIndex=0&pageSize=20&limit=512');
         config.user.value = 'admin';
-        expect(config.getParams()).toBe('user=admin&method=FULL&scope=_FULLTEXT&pageIndex=0&pageSize=20&limit=512');
+        expect(config.getParams()).toBe('user=admin&method=FULL&type=FQ&scope=_FULLTEXT&pageIndex=0&pageSize=20&limit=512');
         config.keywords.value = '北京 广西大厦';
-        expect(config.getParams()).toBe('user=admin&keywords=北京 广西大厦&method=FULL&scope=_FULLTEXT&pageIndex=0&pageSize=20&limit=512');
+        expect(config.getParams()).toBe('user=admin&keywords=北京 广西大厦&method=FULL&type=FQ&scope=_FULLTEXT&pageIndex=0&pageSize=20&limit=512');
     });
 });
 
@@ -110,6 +114,7 @@ function testProperty(config:POIConfiguration) {
     expect(config.layers.key).toBe('layers');
     expect(config.keywords.key).toBe('keywords');
     expect(config.method.key).toBe('method');
+    expect(config.type.key).toBe('type');
     expect(config.scope.key).toBe('scope');
     expect(config.groupBy.key).toBe('groupBy');
     expect(config.bounds.key).toBe('bounds');

@@ -3,6 +3,7 @@ import Configuration from './Configuration';
 
 // 全文方法
 export enum Method { ACC = 'ACC', FULL = 'FULL', LIKE = 'LIKE' };
+export enum Type { PY = 'PY', GQ = 'GQ', FQ = 'FQ' };
 // 空间类型
 type Bounds = [number, number, number, number] | null;
 type Location = [number, number] | null;
@@ -27,6 +28,7 @@ export default class POIConfiguration extends Configuration {
     //
     private _keywords: Option<string> = new Option<string>('keywords', '');
     private _method: Option<Method> = new Option<Method>('method', Method.FULL);
+    private _type: Option<Type> = new Option<Type>('type', Type.FQ);
     // 作用域：'_ID', '_NAME','_ADDR','_NAMES','_FULLTEXT','某个字段'
     private _scope: Option<string> = new Option<string>('scope', '_FULLTEXT');
     // ────────────────────────────────────────────────────────────────────────────────
@@ -77,7 +79,7 @@ export default class POIConfiguration extends Configuration {
         
     constructor() {
         super();
-        this._options = [this._user, this._group, this._layers, this._keywords, this._method, this._scope, this._groupBy, this._bounds, this._location, this._polyline, this._polygon, this._buffer, this._filterCustom, this._sortBy, this._pageIndex, this._pageSize, this._limit, this._callback];
+        this._options = [this._user, this._group, this._layers, this._keywords, this._method, this._type, this._scope, this._groupBy, this._bounds, this._location, this._polyline, this._polygon, this._buffer, this._filterCustom, this._sortBy, this._pageIndex, this._pageSize, this._limit, this._callback];
     }
 
     //
@@ -132,6 +134,16 @@ export default class POIConfiguration extends Configuration {
         const key = this._method.key;
         if (val.key !== key) this._throwSetNameException(key);
         this._method = val;
+    }
+
+    get type(): Option<Type> {
+        return this._type;
+    }
+
+    set type(val: Option<Type>) {
+        const key = this._type.key;
+        if (val.key !== key) this._throwSetNameException(key);
+        this._type = val;
     }
 
     get scope(): Option<string> {
