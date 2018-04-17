@@ -4,134 +4,63 @@ import Configuration from '../../src/configuration/Configuration';
 
 describe('POI 参数配置测试', () => {
 
-    let config: POIConfiguration;
-    beforeEach(() => { 
-        config = new POIConfiguration();
+    const cg = new POIConfiguration();
+
+    test('构造测试', () => { 
+        expect(cg).toBeInstanceOf(POIConfiguration);
     });
 
-    test('POIConfiguration类实例化测试', () => { 
-        testProperty(config);
+    test('构造测试 -- options 属性', () => { 
+        expect(cg.options).not.toBeUndefined();
+        expect(cg.options).toBeInstanceOf(Map);
+        expect(cg.options.size).toBe(19);
     });
 
-    test('POIConfiguration类accessor处理器', () => { 
-        expect(config.user.key).toBe('user');
-        config.user.value = 'user_test';
-        expect(config.user.value).toBe('user_test');
-
-        expect(config.group.key).toBe('group');
-        config.group.value = ['group_test'];
-        expect(config.group.value).toEqual(['group_test']);
-
-        expect(config.layers.key).toBe('layers');
-        config.layers.value = ['layers_test'];
-        expect(config.layers.value).toEqual(['layers_test']);
-
-        expect(config.keywords.key).toBe('keywords');
-        config.keywords.value = 'keywords_test';
-        expect(config.keywords.value).toBe('keywords_test');
-
-        expect(config.method.key).toBe('method');
-        config.method.value = Method.ACC;
-        expect(config.method.value).toEqual(Method.ACC);
-
-        expect(config.type.key).toBe('type');
-        config.type.value = Type.GQ;
-        expect(config.type.value).toEqual(Type.GQ);
-
-        expect(config.scope.key).toBe('scope');
-        config.scope.value = 'scope_test';
-        expect(config.scope.value).toBe('scope_test');
-
-        expect(config.groupBy.key).toBe('groupBy');
-        config.groupBy.value = 'groupBy_test';
-        expect(config.groupBy.value).toBe('groupBy_test');
-
-        expect(config.bounds.key).toBe('bounds');
-        config.bounds.value = [0, 0, 0, 0];
-        expect(config.bounds.value).toEqual([0, 0, 0, 0]);
-
-        expect(config.location.key).toBe('location');
-        config.location.value = [0, 0];
-        expect(config.location.value).toEqual([0, 0]);
-
-        expect(config.polyline.key).toBe('polyline');
-        config.polyline.value = [[0, 0], [1, 1]];
-        expect(config.polyline.value).toEqual([[0, 0], [1, 1]]);
-
-        expect(config.polygon.key).toBe('polygon');
-        config.polygon.value = [[0, 0], [1, 1], [2, 2]];
-        expect(config.polygon.value).toEqual([[0, 0], [1, 1], [2, 2]]);
-
-        expect(config.buffer.key).toBe('buffer');
-        config.buffer.value = 1000;
-        expect(config.buffer.value).toBe(1000);
-
-        expect(config.filterCustom.key).toBe('filterCustom');
-        config.filterCustom.value = 'type: beijing';
-        expect(config.filterCustom.value).toBe('type: beijing');
-
-        expect(config.sortBy.key).toBe('sortBy');
-        config.sortBy.value = '_DIST, _SCORE';
-        expect(config.sortBy.value).toBe('_DIST, _SCORE');
-
-        expect(config.pageIndex.key).toBe('pageIndex');
-        config.pageIndex.value = 1;
-        expect(config.pageIndex.value).toBe(1);
-
-        expect(config.pageSize.key).toBe('pageSize');
-        config.pageSize.value = 50;
-        expect(config.pageSize.value).toBe(50);
-
-        expect(config.limit.key).toBe('limit');
-        config.limit.value = 3000;
-        expect(config.limit.value).toBe(3000);
-
-        expect(config.callback.key).toBe('callback');
-        const cb = (t: any) => { t + 1; };
-        config.callback.value = cb;
-        expect(config.callback.value).toEqual(cb);
+    test('property accessors 测试', () => { 
+        testProperty(cg);
     });
 
-    test('POIConfiguration类 => reset()', () => { 
-        const self = config.reset();
-        testProperty(config);
-        expect(self).toBeInstanceOf(POIConfiguration);
+    test('reset() 测试', () => { 
+        expect(cg.reset()).toBeInstanceOf(POIConfiguration);
+        testProperty(cg);
     });
 
-    test('POIConfiguration类 => getParams()', () => { 
-        expect(config.getParams()).toBe('method=FULL&type=FQ&scope=_FULLTEXT&pageIndex=0&pageSize=20&limit=512');
-        config.user.value = 'admin';
-        expect(config.getParams()).toBe('user=admin&method=FULL&type=FQ&scope=_FULLTEXT&pageIndex=0&pageSize=20&limit=512');
-        config.keywords.value = '北京 广西大厦';
-        expect(config.getParams()).toBe('user=admin&keywords=北京 广西大厦&method=FULL&type=FQ&scope=_FULLTEXT&pageIndex=0&pageSize=20&limit=512');
+    test('getParams() 默认测试', () => { 
+        expect(cg.getParams()).toBe('method=FULL&type=FQ&scope=_FULLTEXT&pageIndex=0&pageSize=20&limit=512');
     });
+
+    test('getParams() 关键字测试1', () => { 
+        cg.reset();
+        (cg.keywords as Option<string>).value = '北京大学';
+        expect(cg.getParams()).toBe('keywords=北京大学&method=FULL&type=FQ&scope=_FULLTEXT&pageIndex=0&pageSize=20&limit=512');
+    });
+
+    test('getParams() 关键字测试2', () => { 
+        cg.reset();
+        (cg.keywords as Option<string>).value = '北京 同仁堂';
+        expect(cg.getParams()).toBe('keywords=北京 同仁堂&method=FULL&type=FQ&scope=_FULLTEXT&pageIndex=0&pageSize=20&limit=512');
+    });
+    
 });
 
 function testProperty(config:POIConfiguration) {
-    expect(config).toBeInstanceOf(POIConfiguration);
-    expect(config.user.key).toBe('user');
-    expect(config.group.key).toBe('group');
-    expect(config.layers.key).toBe('layers');
-    expect(config.keywords.key).toBe('keywords');
-    expect(config.method.key).toBe('method');
-    expect(config.type.key).toBe('type');
-    expect(config.scope.key).toBe('scope');
-    expect(config.groupBy.key).toBe('groupBy');
-    expect(config.bounds.key).toBe('bounds');
-    expect(config.bounds.value).toBeNull();
-    expect(config.location.key).toBe('location');
-    expect(config.location.value).toBeNull();
-    expect(config.polyline.key).toBe('polyline');
-    expect(config.polyline.value).toBeNull();
-    expect(config.polygon.key).toBe('polygon');
-    expect(config.polygon.value).toBeNull();
-    expect(config.buffer.key).toBe('buffer');
-    expect(config.buffer.value).toBeNull();
-    expect(config.filterCustom.key).toBe('filterCustom');
-    expect(config.sortBy.key).toBe('sortBy');
-    expect(config.pageIndex.key).toBe('pageIndex');
-    expect(config.pageSize.key).toBe('pageSize');
-    expect(config.limit.key).toBe('limit');
-    expect(config.callback.key).toBe('callback');
-    expect(config.callback.value).toBeNull();
+    expect(config.user!.value).toBe('');
+    expect(config.group!.value).toEqual([]);
+    expect(config.layers!.value).toEqual([]);
+    expect(config.keywords!.value).toBe('');
+    expect(config.method!.value).toBe(Method.FULL);
+    expect(config.type!.value).toBe(Type.FQ);
+    expect(config.scope!.value).toBe('_FULLTEXT');
+    expect(config.groupBy!.value).toBe('');
+    expect(config.bounds!.value).toBeNull();
+    expect(config.location!.value).toBeNull();
+    expect(config.polyline!.value).toBeNull();
+    expect(config.polygon!.value).toBeNull();
+    expect(config.buffer!.value).toBeNull();
+    expect(config.filterCustom!.value).toBe('');
+    expect(config.sortBy!.value).toBe('');
+    expect(config.pageIndex!.value).toBe(0);
+    expect(config.pageSize!.value).toBe(20);
+    expect(config.limit!.value).toBe(512);
+    expect(config.callback!.value).toBeNull();
 }

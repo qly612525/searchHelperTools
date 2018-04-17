@@ -8,6 +8,10 @@
 </head>
 <body>
     <p>已经加载了sdk插件</p>
-    <script type="text/javascript" src="./bundle.js"></script>
+    <script type="text/javascript" src="/bundle.js"></script>
+    <script type="text/javascript">
+        var query = new zx.POIRequest('http://127.0.0.1:9001/EzPOISearchS/PoiSearchV1REST');
+        query.fulltextQuery('天安门').then(function(res){console.log(res)});
+    </script>
 </body>
 </html>

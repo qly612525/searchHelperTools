@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosResponse, AxiosRequestConfig, AxiosInstance } from 'axios';
 
 import Configuration from '../configuration/Configuration';
 
@@ -6,18 +6,16 @@ export default class BaseRequest {
 
     protected _configuration: Configuration;
     private _url: string;
+    private _axios: AxiosInstance;
 
-    constructor(url?:string) {
+    constructor(url?:string, config?: AxiosRequestConfig) {
         this._configuration = new Configuration();
         this._url = url || '';
+        this._axios = config ? axios.create(config) : axios;
     }
 
     get config():Configuration {
         return this._configuration;
-    }
-
-    set config(config: Configuration) {
-        this._configuration = config;
     }
 
     get url(): string {
@@ -28,43 +26,41 @@ export default class BaseRequest {
         this._url = path;
     }
 
-    checkConfig() {
-        if (this._url === '') return false;
-        // 检测配置信息
-        return true;
+    get axios(): AxiosInstance {
+        return this._axios;
+    }
+
+    reset() {
+        this._configuration.reset();
     }
 
     async get() {
-        
-        if (!this.checkConfig()) {
-            throw new Error('url为空或者配置信息有错误！');
-        }
 
         let response: AxiosResponse<any>;
 
         try {
-            response = await axios.get(this._url);
+            const url = this._url;
+            const paramstring = this._configuration.getParams();
+            response = await this._axios.get(url + '?' + paramstring);
         } catch (e) {
-            throw new Error(`GET请求抛出异常：${e}`);
+            return e;
         }
-        
+
         return response.data;
     }
 
     async post(data: object) {
 
-        if (!this.checkConfig()) {
-            throw new Error('url为空或者配置信息有错误！');
-        }
-
         let response: AxiosResponse<any>;
 
         try {
-            response = await axios.post(this._url, data);
+            const url = this._url;
+            const paramstring = this._configuration.getParams();
+            response = await this._axios.post(url + '?' + paramstring, data);
         } catch (e) {
-            throw new Error(`POST请求抛出异常：${e}`);
+            return e;
         }
-    
+
         return response.data;
     }
 }

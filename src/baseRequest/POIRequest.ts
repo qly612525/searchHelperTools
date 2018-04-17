@@ -1,48 +1,66 @@
+import Option from '../option/Option';
 import BaseRequest from './BaseRequest';
-import POIConfiguration from '../configuration/POIConfiguration';
-import axios, { AxiosResponse } from 'axios';
+import POIConfiguration, { Type } from '../configuration/POIConfiguration';
+import { AxiosRequestConfig } from 'axios';
+
+interface IConfig {
+    [key:string]: string | number;
+}
 
 export default class POIRequest extends BaseRequest {
 
-    constructor(url: string) {
-        super(url);
+    constructor(url: string, config?: AxiosRequestConfig) {
+        super(url, config);
         this._configuration = new POIConfiguration();
     }
 
-    async get() {
-        if (!this.checkConfig()) {
-            throw new Error('url为空或者配置信息有错误！');
+    fulltextQuery(kds: string, config?: IConfig) { 
+        const proxy = this.config as POIConfiguration;
+        const options = proxy.options;
+
+        if (kds === undefined || kds === '') return new Error('请求参数--关键字不能为空！');
+
+        if (config) {
+            Object.keys(config).map((k) => { 
+                const op: Option<any> | undefined = options.get(k);
+                if (op) {
+                    op.value = config[k];
+                }
+            });
         }
 
-        let response: AxiosResponse<any>;
+        // 关键字分隔，增加城市定位
+        const kdsSplits: string[] = kds.split('');
+        (proxy.keywords as Option<string>).value = kds;
 
-        try {
-            const url = this.url;
-            const paramstring = this._configuration.getParams();
-            response = await axios.get(url + '?' + paramstring);
-        } catch (e) {
-            throw new Error(`GET请求抛出异常：${e}`);
-        }
-
-        return response.data;
+        const result = this.get();
+        return result;
     }
+    
+    spellQuery(kds: string, config?: IConfig) { 
+        const proxy = this.config as POIConfiguration;
+        const options = proxy.options;
 
-    async post(data: object) {
-        if (!this.checkConfig()) {
-            throw new Error('url为空或者配置信息有错误！');
+        if (kds === undefined || kds === '') return new Error('请求参数--关键字不能为空！');
+
+        if (config) {
+            Object.keys(config).map((k) => {
+                const op: Option<any> | undefined = options.get(k);
+                if (op) {
+                    op.value = config[k];
+                }
+            });
         }
 
-        let response: AxiosResponse<any>;
+        (proxy.keywords as Option<string>).value = kds;
+        (proxy.type as Option<Type>).value = Type.PY;
 
-        try {
-            const url = this.url;
-            const paramstring = this._configuration.getParams();
-            response = await axios.post(url + '?' + paramstring, data);
-        } catch (e) {
-            throw new Error(`POST请求抛出异常：${e}`);
-        }
-
-        return response.data;
+        const result = this.get();
+        return result;
     }
+    
+    // groupQuery(category: string, config?: any) {
+
+    // }
 
 }

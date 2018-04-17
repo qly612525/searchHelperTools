@@ -1,48 +1,67 @@
-jest.mock('../../src/baseRequest/POIRequest');
 import POIRequest from '../../src/baseRequest/POIRequest';
+import axios from 'axios';
+import POIConfiguration from '../../src/configuration/POIConfiguration';
 
-POIRequest.prototype.get = jest.fn()
-    .mockImplementationOnce(() => {
-    return { data: { name: 'poi async' } };
-    })
-    .mockImplementationOnce(() => {
-        return new Error('获取数据失败！');
-    });
+jest.mock('axios');
+axios.get = jest.fn()
+    .mockReturnValueOnce({ data: { data: { name: 'poi async' } } })
+    .mockReturnValueOnce({ data: { data: { name: 'poi async' } } })
+    .mockRejectedValueOnce(new Error('GET请求抛出异常：获取数据失败！'))
+    .mockReturnValueOnce({ data: { data: { name: 'poi async' } } })
+    .mockReturnValueOnce({ data: { data: { name: 'poi async' } } })
+    .mockRejectedValueOnce(new Error('GET请求抛出异常：获取数据失败！'));
 
-POIRequest.prototype.post = jest.fn()
-    .mockImplementationOnce(() => {
-        return { data: { name: 'poi async post' } };
-    })
-    .mockImplementationOnce(() => { 
-        return new Error('更新数据失败！');
-    });
 
 describe('POIRequest 异步接口测试', () => { 
 
-    const req = new POIRequest('http://180.76.190.175:55504/EzPOISearchS/');
+    const req = new POIRequest('http://10.0.10.162:8080/PGIS_S_Search/');
 
-    test('GET 网络正常情况下测试', async () => {
-        const result = { data: { name: 'poi async' } };
-        const data = await req.get();
-        expect(data).toEqual(result);
+    test('fulltext() 默认参数测试', async () => { 
+        const res = await req.fulltextQuery('天安门');
+        expect(res).toEqual({ data: { name: 'poi async' } });
     });
 
-    test('GET 网络异常情况下测试', async () => { 
-        const error: Error = await req.get();
-        expect(error).toBeInstanceOf(Error);
-        expect(error.message).toBe('获取数据失败！');
+    test('fulltext() 带其他全文参数测试', async () => { 
+        expect.assertions(3);
+        const res = await req.fulltextQuery('天安门', { pageSize: 50 });
+        const config = req.config as POIConfiguration;
+        expect(config.keywords!.value).toBe('天安门');
+        expect(config.pageSize!.value).toBe(50);
+        expect(res).toEqual({ data: { name: 'poi async' } });
     });
 
-    test('POST 网络正常情况下测试', async () => { 
-        const result = { data: { name: 'poi async post' } };
-        const data = await req.post({ data: { name: 'post' } });
-        expect(data).toEqual(result);
+    test('fulltext() 异常测试', async () => { 
+        const error: Error = await req.fulltextQuery('天安门');
+        expect(error.message).toBe('GET请求抛出异常：获取数据失败！');
     });
 
-    test('POST 网络异常情况下测试', async () => { 
-        const error: Error = await req.post({ data: { name: 'post' } });
-        expect(error).toBeInstanceOf(Error);
-        expect(error.message).toBe('更新数据失败！');
+    test('fulltext() 空文本异常', async () => {
+        const error: Error = await req.fulltextQuery('');
+        expect(error.message).toBe('请求参数--关键字不能为空！');
+    });
+
+    test('spell() 默认参数测试', async () => {
+        const res = await req.spellQuery('天');
+        expect(res).toEqual({ data: { name: 'poi async' } });
+    });
+
+    test('spell() 带其他全文参数测试', async () => {
+        expect.assertions(3);
+        const res = await req.spellQuery('天', { pageSize: 50 });
+        const config = req.config as POIConfiguration;
+        expect(config.keywords!.value).toBe('天');
+        expect(config.pageSize!.value).toBe(50);
+        expect(res).toEqual({ data: { name: 'poi async' } });
+    });
+
+    test('spell() 异常测试', async () => {
+        const error: Error = await req.spellQuery('天');
+        expect(error.message).toBe('GET请求抛出异常：获取数据失败！');
+    });
+
+    test('spell() 空文本异常', async () => {
+        const error: Error = await req.spellQuery('');
+        expect(error.message).toBe('请求参数--关键字不能为空！');
     });
 
 });

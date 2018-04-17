@@ -4,23 +4,12 @@ import Option from '../../src/option/Option';
 
 describe('BaseResquest ==> 属性测试套件', () => {
 
-    let request: BaseRequest;
-
-    beforeEach(() => {
-        request = new BaseRequest();
-    });
+    let request: BaseRequest = new BaseRequest();
 
     test('get config test', () => {
-        expect(request.config.getLength()).toBe(0);
-    });
-
-    test('set config test', () => {
-        const oldConfig = request.config;
-        const config = new Configuration();
-        const option = new Option('KEY1', 'VALUE1');
-        config.push(option);
-        request.config = config;
-        expect(request.config).not.toEqual(oldConfig);
+        expect.assertions(2);
+        expect(request.config).not.toBeUndefined();
+        expect(request.config).toBeInstanceOf(Configuration);
     });
 
     test('get url test', () => {
@@ -32,10 +21,15 @@ describe('BaseResquest ==> 属性测试套件', () => {
         expect(request.url).toEqual('http://127.0.0.1:8080/request');
     });
 
-    test('get or post request when url is ""', () => {
-        request.url = '';
-        const isOk: boolean = request.checkConfig();
-        expect(isOk).not.toBeTruthy();
+    test('get axios test', () => { 
+        expect(request.axios).not.toBeUndefined();
+        expect(request.axios).not.toBeNull();
     });
-    
+
+    test('reset() 基础测试', () => { 
+        request.reset();
+        const cg: Configuration = request.config;
+        expect(cg).toBeInstanceOf(Configuration);
+        expect(cg.options.size).toBe(0);
+    });
 });

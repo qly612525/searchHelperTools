@@ -15,300 +15,184 @@ type Buffer = number | null;
 type JSONP = ((data: any) => void) | null;
 
 export default class POIConfiguration extends Configuration {
-
-    //
-    // ─── BASIC CONFIG INFO ──────────────────────────────────────────────────────────
-    //
-    private _user: Option<string> = new Option<string>('user', '');
-    private _group: Option<Array<string>> = new Option<Array<string>>('group', []);
-    private _layers: Option<Array<string>> = new Option<Array<string>>('layers', []);
-
-    //
-    // ─── CONFIGURE KEYWORDS PARAMS ──────────────────────────────────────────────────
-    //
-    private _keywords: Option<string> = new Option<string>('keywords', '');
-    private _method: Option<Method> = new Option<Method>('method', Method.FULL);
-    private _type: Option<Type> = new Option<Type>('type', Type.FQ);
-    // 作用域：'_ID', '_NAME','_ADDR','_NAMES','_FULLTEXT','某个字段'
-    private _scope: Option<string> = new Option<string>('scope', '_FULLTEXT');
-    // ────────────────────────────────────────────────────────────────────────────────
-
-    //
-    // ─── GROUP BY ───────────────────────────────────────────────────────────────────
-    //
-    private _groupBy: Option<string> = new Option<string>('groupBy', '');
-    // ────────────────────────────────────────────────────────────────────────────────
-
-    //
-    // ─── SPATIAL FILTER ─────────────────────────────────────────────────────────────
-    //
-    private _bounds: Option<Bounds> = new Option<Bounds>('bounds', null);
-    private _location: Option<Location> = new Option<Location>('location', null);
-    private _polyline: Option<Polyline> = new Option<Polyline>('polyline', null);
-    private _polygon: Option<Polygon> = new Option<Polygon>('polygon', null);
-    private _buffer: Option<Buffer> = new Option<Buffer>('buffer', null);
-    // ────────────────────────────────────────────────────────────────────────────────
-
-    //
-    // ─── CUSTOM FILTER ──────────────────────────────────────────────────────────────
-    //
-    private _filterCustom: Option<string> = new Option<string>('filterCustom', '');
-    // ────────────────────────────────────────────────────────────────────────────────
-
-    //
-    // ─── SORT BY ────────────────────────────────────────────────────────────────────
-    //
-    // 排序规则 '_DIST', '_SCORE', '字段列表'。 多个字段排序用逗号分隔
-    private _sortBy: Option<string> = new Option<string>('sortBy', '');
-    // ────────────────────────────────────────────────────────────────────────────────
-
-    //
-    // ─── SPLIT PAGE CONFIG ──────────────────────────────────────────────────────────
-    //
-    private _pageIndex: Option<number> = new Option<number>('pageIndex', 0);
-    private _pageSize: Option<number> = new Option<number>('pageSize', 20);
-    private _limit: Option<number> = new Option<number>('limit', 512); // 最大4096， 小于512无效
-    // ────────────────────────────────────────────────────────────────────────────────
-
-    //
-    // ─── JSONP PROTOCOL ─────────────────────────────────────────────────────────────
-    //
-    private _callback: Option<JSONP> = new Option<JSONP>('callback', null);
-    // ────────────────────────────────────────────────────────────────────────────────
-    
         
     constructor() {
+
         super();
-        this._options = [this._user, this._group, this._layers, this._keywords, this._method, this._type, this._scope, this._groupBy, this._bounds, this._location, this._polyline, this._polygon, this._buffer, this._filterCustom, this._sortBy, this._pageIndex, this._pageSize, this._limit, this._callback];
+        //
+        // ─── BASIC CONFIG INFO ──────────────────────────────────────────────────────────
+        //
+        this._options.set('user', new Option<string>('user', ''));
+        this._options.set('group', new Option<Array<string>>('group', []));
+        this._options.set('layers', new Option<Array<string>>('layers', []));
+        // ─────────────────────────────────────────────────────────────────
+
+        //
+        // ─── CONFIGURE KEYWORDS PARAMS ──────────────────────────────────────────────────
+        //
+        this._options.set('keywords', new Option<string>('keywords', ''));
+        this._options.set('method', new Option<Method>('method', Method.FULL));
+        this._options.set('type', new Option<Type>('type', Type.FQ));
+        // 作用域：'_ID', '_NAME','_ADDR','_NAMES','_FULLTEXT','某个字段'
+        this._options.set('scope', new Option<string>('scope', '_FULLTEXT'));
+        // ────────────────────────────────────────────────────────────────────────────────
+
+        //
+        // ─── GROUP BY ───────────────────────────────────────────────────────────────────
+        //
+        this._options.set('groupBy', new Option<string>('groupBy', ''));
+        // ────────────────────────────────────────────────────────────────────────────────
+
+        //
+        // ─── SPATIAL FILTER ─────────────────────────────────────────────────────────────
+        //
+        this._options.set('bounds', new Option<Bounds>('bounds', null));
+        this._options.set('location', new Option<Location>('location', null));
+        this._options.set('polyline', new Option<Polyline>('polyline', null));
+        this._options.set('polygon', new Option<Polygon>('polygon', null));
+        this._options.set('buffer', new Option<Buffer>('buffer', null));
+        // ────────────────────────────────────────────────────────────────────────────────
+
+        //
+        // ─── CUSTOM FILTER ──────────────────────────────────────────────────────────────
+        //
+        this._options.set('filterCustom', new Option<string>('filterCustom', ''));
+        // ────────────────────────────────────────────────────────────────────────────────
+
+        //
+        // ─── SORT BY ────────────────────────────────────────────────────────────────────
+        //
+        // 排序规则 '_DIST', '_SCORE', '字段列表'。 多个字段排序用逗号分隔
+        this._options.set('sortBy', new Option<string>('sortBy', ''));
+        // ────────────────────────────────────────────────────────────────────────────────
+
+        //
+        // ─── SPLIT PAGE CONFIG ──────────────────────────────────────────────────────────
+        // 
+        this._options.set('pageIndex', new Option<number>('pageIndex', 0));
+        this._options.set('pageSize', new Option<number>('pageSize', 20));
+        this._options.set('limit', new Option<number>('limit', 512)); // 最大4096， 小于512无效
+        // ────────────────────────────────────────────────────────────────────────────────
+
+        //
+        // ─── JSONP PROTOCOL ─────────────────────────────────────────────────────────────
+        //
+        this._options.set('callback', new Option<JSONP>('callback', null));
+        // ────────────────────────────────────────────────────────────────────────────────          
     }
 
     //
     // ─── PROPERTY ACCESSOR ──────────────────────────────────────────────────────────
     //
 
-    get user(): Option<string> {
-        return this._user;
+    get user(): Option<string> | undefined {
+        return this._options.get('user');
     }
 
-    set user(val: Option<string>) {
-        const key = this._user.key;
-        if (val.key !== key) this._throwSetNameException(key);
-        this._user = val;
+    get group(): Option<Array<string>> | undefined {
+        return this._options.get('group');
     }
 
-    get group(): Option<Array<string>> {
-        return this._group;
+    get layers(): Option<Array<string>> | undefined {
+        return this._options.get('layers');
     }
 
-    set group(val: Option<Array<string>>) {
-        const key = this._group.key;
-        if (val.key !== key) this._throwSetNameException(key);
-        this._group = val;
+    get keywords(): Option<string> | undefined {
+        return this._options.get('keywords');
     }
 
-    get layers(): Option<Array<string>> {
-        return this._layers;
+    get method(): Option<Method> | undefined {
+        return this._options.get('method');
     }
 
-    set layers(val: Option<Array<string>>) {
-        const key = this._layers.key;
-        if (val.key !== key) this._throwSetNameException(key);
-        this._layers = val;
-    } 
-
-    get keywords(): Option<string> {
-        return this._keywords;
+    get type(): Option<Type> | undefined {
+        return this._options.get('type');
     }
 
-    set keywords(val: Option<string>) {
-        const key = this._keywords.key;
-        if (val.key !== key) this._throwSetNameException(key);
-        this._keywords = val;
+    get scope(): Option<string> | undefined {
+        return this._options.get('scope');
     }
 
-    get method(): Option<Method> {
-        return this._method;
+    get groupBy(): Option<string> | undefined {
+        return this._options.get('groupBy');
     }
 
-    set method(val: Option<Method>) {
-        const key = this._method.key;
-        if (val.key !== key) this._throwSetNameException(key);
-        this._method = val;
+    get bounds(): Option<Bounds> | undefined {
+        return this._options.get('bounds');
     }
 
-    get type(): Option<Type> {
-        return this._type;
+    get location(): Option<Location> | undefined {
+        return this._options.get('location');
     }
 
-    set type(val: Option<Type>) {
-        const key = this._type.key;
-        if (val.key !== key) this._throwSetNameException(key);
-        this._type = val;
+    get polyline(): Option<Polyline> | undefined {
+        return this._options.get('polyline');
     }
 
-    get scope(): Option<string> {
-        return this._scope;
+    get polygon(): Option<Polygon> | undefined {
+        return this._options.get('polygon');
     }
 
-    set scope(val: Option<string>) {
-        const key = this._scope.key;
-        if (val.key !== key) this._throwSetNameException(key);
-        this._scope = val;
+    get buffer(): Option<Buffer> | undefined {
+        return this._options.get('buffer');
     }
 
-    get groupBy(): Option<string> {
-        return this._groupBy;
+    get filterCustom(): Option<string> | undefined {
+        return this._options.get('filterCustom');
     }
 
-    set groupBy(val: Option<string>) {
-        const key = this._groupBy.key;
-        if (val.key !== key) this._throwSetNameException(key);
-        this._groupBy = val;
+    get sortBy(): Option<string> | undefined {
+        return this._options.get('sortBy');
     }
 
-    get bounds(): Option<Bounds> {
-        return this._bounds;
+    get pageIndex(): Option<number> | undefined {
+        return this._options.get('pageIndex');
     }
 
-    set bounds(val: Option<Bounds>) {
-        const key = this._bounds.key;
-        if (val.key !== key) this._throwSetNameException(key);
-        this._bounds = val;
+    get pageSize(): Option<number> | undefined {
+        return this._options.get('pageSize');
     }
 
-    get location(): Option<Location> {
-        return this._location;
+    get limit(): Option<number> | undefined {
+        return this._options.get('limit');
     }
 
-    set location(val: Option<Location>) {
-        const key = this._location.key;
-        if (val.key !== key) this._throwSetNameException(key);
-        this._location = val;
-    }
-
-    get polyline(): Option<Polyline> {
-        return this._polyline;
-    }
-
-    set polyline(val: Option<Polyline>) {
-        const key = this._polyline.key;
-        if (val.key !== key) this._throwSetNameException(key);
-        this._polyline = val;
-    }
-
-    get polygon(): Option<Polygon> {
-        return this._polygon;
-    }
-
-    set polygon(val: Option<Polygon>) {
-        const key = this._polygon.key;
-        if (val.key !== key) this._throwSetNameException(key);
-        this._polygon = val;
-    }
-
-    get buffer(): Option<Buffer> {
-        return this._buffer;
-    }
-
-    set buffer(val: Option<Buffer>) {
-        const key = this._buffer.key;
-        if (val.key !== key) this._throwSetNameException(key);
-        this._buffer = val;
-    }
-
-    get filterCustom(): Option<string> {
-        return this._filterCustom;
-    }
-
-    set filterCustom(val: Option<string>) {
-        const key = this._filterCustom.key;
-        if (val.key !== key) this._throwSetNameException(key);
-        this._filterCustom = val;
-    }
-
-    get sortBy(): Option<string> {
-        return this._sortBy;
-    }
-
-    set sortBy(val: Option<string>) {
-        const key = this._sortBy.key;
-        if (val.key !== key) this._throwSetNameException(key);
-        this._sortBy = val;
-    }
-
-    get pageIndex(): Option<number> {
-        return this._pageIndex;
-    }
-
-    set pageIndex(val: Option<number>) {
-        const key = this._pageIndex.key;
-        if (val.key !== key) this._throwSetNameException(key);
-        this._pageIndex = val;
-    }
-
-    get pageSize(): Option<number> {
-        return this._pageSize;
-    }
-
-    set pageSize(val: Option<number>) {
-        const key = this._pageSize.key;
-        if (val.key !== key) this._throwSetNameException(key);
-        this._pageSize = val;
-    }
-
-    get limit(): Option<number> {
-        return this._limit;
-    }
-
-    set limit(val: Option<number>){
-        const key = this._limit.key;
-        if (val.key !== key) this._throwSetNameException(key);
-        this._limit = val;
-    }
-
-    get callback(): Option<JSONP> {
-        return this._callback;
-    }
-
-    set callback(val: Option<JSONP>) {
-        const key = this._callback.key;
-        if (val.key !== key) this._throwSetNameException(key);
-        this._callback = val;
+    get callback(): Option<JSONP> | undefined {
+        return this._options.get('callback');
     }
 
     // ────────────────────────────────────────────────────────────────────────────────
-
-    reset(): POIConfiguration {
-        this._user = new Option<string>('user', '');
-        this._group = new Option<Array<string>>('group', []);
-        this._layers = new Option<Array<string>>('layers', []);
-        this._keywords = new Option<string>('keywords', '');
-        this._method = new Option<Method>('method', Method.FULL);
-        this._scope = new Option<string>('scope', '_FULLTEXT');
-        this._groupBy = new Option<string>('groupBy', '');
-        this._bounds = new Option<Bounds>('bounds', null);
-        this._location = new Option<Location>('location', null);
-        this._polyline = new Option<Polyline>('polyline', null);
-        this._polygon = new Option<Polygon>('polygon', null);
-        this._buffer = new Option<Buffer>('buffer', null);
-        this._filterCustom = new Option<string>('filterCustom', '');
-        this._sortBy = new Option<string>('sortBy', '');
-        this._pageIndex = new Option<number>('pageIndex', 0);
-        this._pageSize = new Option<number>('pageSize', 20);
-        this._limit = new Option<number>('limit', 512);
-        this._callback = new Option<JSONP>('callback', null);
-        return this;
-    }
 
     //
     // ─── OVERRIDE FUNCTIONS ─────────────────────────────────────────────────────────
     //
 
+    reset(): POIConfiguration {
+        (this.user as Option<string>).value = '';
+        (this.group as Option<Array<string>>).value = [];
+        (this.layers as Option<Array<string>>).value = [];
+        (this.keywords as Option<string>).value = '';
+        (this.method as Option<Method>).value = Method.FULL;
+        (this.scope as Option<string>).value = '_FULLTEXT';
+        (this.groupBy as Option<string>).value = '';
+        (this.bounds as Option<Bounds>).value = null;
+        (this.location as Option<Location>).value = null;
+        (this.polyline as Option<Polyline>).value = null;
+        (this.polygon as Option<Polygon>).value = null;
+        (this.buffer as Option<Buffer>).value = null;
+        (this.filterCustom as Option<string>).value = '';
+        (this.sortBy as Option<string>).value = '';
+        (this.pageIndex as Option<number>).value = 0;
+        (this.pageSize as Option<number>).value = 20;
+        (this.limit as Option<number>).value = 512;
+        (this.callback as Option<JSONP>).value = null;
+        return this;
+    }
+
     getParams(): string {
         let val: string[] = [];
         const ops = this._options;
-        ops.map((op: any) => {
-
+        for (const [k, op] of ops) {
             let isJoin = true;
             if (op.value === null) {
                 isJoin = false;
@@ -321,8 +205,7 @@ export default class POIConfiguration extends Configuration {
             if (isJoin) {
                 val.push(op.key + '=' + op.value);
             }
-
-        });
+        }
         return val.join('&');
     }
 

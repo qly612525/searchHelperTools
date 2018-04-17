@@ -1,24 +1,17 @@
 import Configuration from '../../src/configuration/Configuration';
 import Option from '../../src/option/Option';
-
-jest.mock('../../src/baseRequest/BaseRequest');
 import BaseRequest from '../../src/baseRequest/BaseRequest';
+import axios from 'axios';
 
-BaseRequest.prototype.get = jest.fn()
-    .mockImplementationOnce(() => {
-        return { data: { name: '123' } };
-    })
-    .mockImplementationOnce(() => {
-        return new Error('获取数据失败！');
-    });
+jest.mock('axios');
+axios.get = jest.fn()
+    .mockReturnValueOnce({ data: { data: { name: '123' } } })
+    .mockRejectedValueOnce(new Error('GET请求抛出异常：获取数据失败！'));
 
-BaseRequest.prototype.post = jest.fn()
-    .mockImplementationOnce(() => {
-        return { data: { name: 'post123' } };
-    })
-    .mockImplementationOnce(() => {
-        return new Error('更新数据失败！');
-    });
+axios.post = jest.fn()
+    .mockReturnValueOnce({ data: { data: { name: 'post123' } } })
+    .mockRejectedValueOnce(new Error('POST请求抛出异常：更新数据失败！'));
+
 
 describe('BaseResquest ==> 异步接口测试套件', () => { 
     
@@ -36,10 +29,8 @@ describe('BaseResquest ==> 异步接口测试套件', () => {
     });
 
     test('get request have a error test', async () => {
-        expect.assertions(2);
         const error: Error = await request.get();
-        expect(error).toBeInstanceOf(Error);
-        expect(error.message).toBe('获取数据失败！');
+        expect(error.message).toBe('GET请求抛出异常：获取数据失败！');
     });
 
     test('post request test', async () => { 
@@ -50,11 +41,9 @@ describe('BaseResquest ==> 异步接口测试套件', () => {
     });
 
     test('post request have a error test', async () => { 
-        expect.assertions(2);
         const param = { data: { name: 'post' } };
         const error: Error = await request.post(param);
-        expect(error).toBeInstanceOf(Error);
-        expect(error.message).toBe('更新数据失败！');
+        expect(error.message).toBe('POST请求抛出异常：更新数据失败！');
     });
 
 });
