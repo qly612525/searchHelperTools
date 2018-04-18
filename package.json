@@ -21,6 +21,20 @@
     "url": "https://github.com/qly612525/searchHelperTools/issues"
   },
   "homepage": "https://github.com/qly612525/searchHelperTools#readme",
+  "bundledDependencies": [
+    "@types/jest", 
+    "@types/vinyl",
+    "browserify",
+    "del",
+    "gulp",
+    "gulp-typescript",
+    "jest",
+    "ts-jest",
+    "tsify",
+    "typescript",
+    "vinyl-source-stream",
+    "axios"
+  ],
   "devDependencies": {
     "@types/jest": "^22.2.2",
     "@types/vinyl": "^2.0.2",
