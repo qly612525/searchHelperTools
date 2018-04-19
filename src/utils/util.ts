@@ -14,4 +14,10 @@ export default class Util {
         return codes[name];
     }
 
+    static regTransport(text: string): boolean {
+        const reg = /^(运通|专|夜|机场巴士)?\d+(路|号线)?$/g;
+        if (text.match(reg)) return true;
+        return false;
+    }
+
 } 
