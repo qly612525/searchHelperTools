@@ -35,7 +35,8 @@
     "vinyl-source-stream": "^2.0.0"
   },
   "dependencies": {
-    "axios": "^0.18.0"
+    "axios": "^0.18.0",
+    "tar-pack": "^3.4.1"
   },
   "bundleDependencies": [
     "@types/jest",
