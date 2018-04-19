@@ -14,19 +14,19 @@
     <script type="text/javascript" src="/bundle.js"></script>
     <script type="text/javascript">
         var search = document.getElementById('search');
-        var query = new zx.POIRequest('http://127.0.0.1:9001/poi/PGIS_S_Search/PoiSearchV1REST');
+        var query = new zx.POIRequest('http://127.0.0.1:9001/poi/EzPOISearchS/PoiSearchV1REST');
         var dom = document.getElementById('code');
         var btn = document.getElementById('submit');
         search.addEventListener('change', function(){
             var text = search.value;
-            query.spellQuery(text).then(function (res) { 
-                dom.innerHTML = JSON.stringify(res);
+            query.spellQuery(text).then(function (poi) { 
+                dom.innerHTML = poi.getOnePOI();
             });
         });
         btn.addEventListener('click', function(){
             var text = search.value;
-            query.fulltextQuery(text).then(function(res){
-                dom.innerHTML = JSON.stringify(res);
+            query.fulltextQuery(text).then(function(poi){
+                dom.innerHTML = poi.getScoreGrateThanOne();
             });
         });
     </script>

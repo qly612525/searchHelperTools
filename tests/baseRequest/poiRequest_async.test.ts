@@ -31,12 +31,12 @@ describe('POIRequest 异步接口测试', () => {
     });
 
     test('fulltext() 异常测试', async () => { 
-        const error: Error = await req.fulltextQuery('天安门');
+        const error = await req.fulltextQuery('天安门');
         expect(error.message).toBe('GET请求抛出异常：获取数据失败！');
     });
 
     test('fulltext() 空文本异常', async () => {
-        const error: Error = await req.fulltextQuery('');
+        const error = await req.fulltextQuery('');
         expect(error.message).toBe('请求参数--关键字不能为空！');
     });
 
@@ -55,12 +55,12 @@ describe('POIRequest 异步接口测试', () => {
     });
 
     test('spell() 异常测试', async () => {
-        const error: Error = await req.spellQuery('天');
+        const error = await req.spellQuery('天');
         expect(error.message).toBe('GET请求抛出异常：获取数据失败！');
     });
 
     test('spell() 空文本异常', async () => {
-        const error: Error = await req.spellQuery('');
+        const error = await req.spellQuery('');
         expect(error.message).toBe('请求参数--关键字不能为空！');
     });
 

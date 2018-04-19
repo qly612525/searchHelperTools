@@ -1,6 +1,7 @@
 import Option from '../option/Option';
 import BaseRequest from './BaseRequest';
 import POIConfiguration, { Type } from '../configuration/POIConfiguration';
+import POIParser from '../parser/poi';
 import { AxiosRequestConfig } from 'axios';
 
 interface IConfig {
@@ -14,7 +15,7 @@ export default class POIRequest extends BaseRequest {
         this._configuration = new POIConfiguration();
     }
 
-    fulltextQuery(kds: string, config?: IConfig) { 
+    async fulltextQuery(kds: string, config?: IConfig) { 
         const proxy = this.config as POIConfiguration;
         const options = proxy.options;
 
@@ -33,11 +34,11 @@ export default class POIRequest extends BaseRequest {
         const kdsSplits: string[] = kds.split('');
         (proxy.keywords as Option<string>).value = kds;
 
-        const result = this.get();
-        return result;
+        const result = await this.get();
+        return new POIParser(result);
     }
     
-    spellQuery(kds: string, config?: IConfig) { 
+    async spellQuery(kds: string, config?: IConfig) { 
         const proxy = this.config as POIConfiguration;
         const options = proxy.options;
 
@@ -55,8 +56,8 @@ export default class POIRequest extends BaseRequest {
         (proxy.keywords as Option<string>).value = kds;
         (proxy.type as Option<Type>).value = Type.PY;
 
-        const result = this.get();
-        return result;
+        const result = await this.get();
+        return new POIParser(result);
     }
     
     // groupQuery(category: string, config?: any) {
