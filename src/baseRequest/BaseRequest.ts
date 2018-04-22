@@ -34,13 +34,13 @@ export default class BaseRequest {
         this._configuration.reset();
     }
 
-    async get() {
+    async get(type?: any) {
 
         let response: AxiosResponse<any>;
 
         try {
             const url = this._url;
-            const paramstring = this._configuration.getParams();
+            const paramstring = this._configuration.getParams(type);
             response = await this._axios.get(url + '?' + paramstring);
         } catch (e) {
             return e;

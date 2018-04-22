@@ -1,7 +1,7 @@
 import Option from '../option/Option';
 import Configuration from './Configuration';
 
-
+export enum QueryClass { SEARCH, BUSLINE };
 
 export default class AMapConfiguration extends Configuration {
     
@@ -18,8 +18,16 @@ export default class AMapConfiguration extends Configuration {
         this._options.set('type', new Option<string>('type', ''));
         this._options.set('page_size', new Option<number>('page_size', 10));
         this._options.set('page_num', new Option<number>('page_num', 1));
-        this._options.set('region', new Option<string>('region', ''));
+        this._options.set('region', new Option<string>('region', '全国'));
         this._options.set('output', new Option<string>('output', 'json'));
+
+        //
+        // ─── BUS LINE PARAMS ─────────────────────────────────────────────
+        //
+        this._options.set('busLine', new Option<string>('busLine', ''));
+        this._options.set('city', new Option<string>('city', '全国'));
+        // ─────────────────────────────────────────────────────────────────
+
     }
 
     //
@@ -54,6 +62,14 @@ export default class AMapConfiguration extends Configuration {
         return this._options.get('output');
     }
 
+    get busLine(): Option<string> | undefined {
+        return this._options.get('busLine');
+    }
+
+    get city(): Option<string> | undefined {
+        return this._options.get('city');
+    }
+
     // ────────────────────────────────────────────────────────────────────────────────
 
     //
@@ -66,31 +82,37 @@ export default class AMapConfiguration extends Configuration {
         this.type!.value = '';
         this.page_size!.value = 10;
         this.page_num!.value = 1;
-        this.region!.value = '';
+        this.region!.value = '全国';
         this.output!.value = 'json';
+        this.busLine!.value = '';
+        this.city!.value = '全国';
         return this;
     }
 
-    getParams(): string {
+    getParams(type: QueryClass): string {
         let val: string[] = [];
         const ops = this._options;
         for (const [k, op] of ops) {
-            let isJoin = true;
-            if (op.value === null) {
-                isJoin = false;
-            } else if (op.value === '') {
-                isJoin = false;
-            } else if (((op.value) as Array<string>).length === 0) {
-                isJoin = false;
+            if (type === QueryClass.SEARCH) {
+                if (k in ['q', 'scope', 'type', 'region'] && this._handleDefault(op.value)) {
+                    val.push(op.key + '=' + op.value);
+                }
+            } else if (type === QueryClass.BUSLINE) {
+                if (k in ['busLine', 'city'] && this._handleDefault(op.value)) {
+                    val.push(op.key + '=' + op.value);
+                }
             }
-
-            if (isJoin) {
-                val.push(op.key + '=' + op.value);
-            }
+            if (this._handleDefault(op.value)) val.push(op.key + '=' + op.value);
         }
 
         val.push('ak=' + this._ak);
         return val.join('&');
+    }
+
+    _handleDefault(v: string | number) {
+        if (v === null) return false;
+        else if (v === '') return false;
+        else return true;
     }
 
     // ────────────────────────────────────────────────────────────────────────────────

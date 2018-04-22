@@ -17,7 +17,7 @@ export default class Configuration {
         return this;
     }
 
-    getParams(): string {
+    getParams(type? :any): string {
         return '';
     }
 

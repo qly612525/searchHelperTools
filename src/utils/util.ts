@@ -1,3 +1,7 @@
+import POIRequest from "../baseRequest/POIRequest";
+import AMapRequest from "../baseRequest/AMapRequest";
+import axios from "axios";
+
 interface ICODE {
     [index: string]: string;
 }
@@ -18,6 +22,14 @@ export default class Util {
         const reg = /^(运通|专|夜|机场巴士)?\d+(路|号线)?$/g;
         if (text.match(reg)) return true;
         return false;
+    }
+
+    static all(arr: Array<any>) {
+        return axios.all(arr);
+    }
+
+    static spread(fn: any) {
+        return axios.spread(fn);
     }
 
 } 
